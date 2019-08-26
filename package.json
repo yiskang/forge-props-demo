@@ -1,0 +1,20 @@
+{
+  "name": "forge-props-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "json-server": "^0.14.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node mock-server/index.js"
+  },
+  "keywords": [],
+  "author": "yiskang <eason.kang@autodesk.com>",
+  "license": "MIT"
+}
