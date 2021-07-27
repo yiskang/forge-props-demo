@@ -38,6 +38,18 @@ class CustomPropertyPanel extends Autodesk.Viewing.Extensions.ViewerPropertyPane
     });
   }
 
+  requestProperties() {
+    if (this.isVisible() && this.isDirty) {
+
+      if (this.currentModel != null && this.currentNodeIds.length > 0) {
+        this.requestNodeProperties(this.currentNodeIds[0]);
+      } else {
+        this.showDefaultProperties();
+      }
+      this.isDirty = false;
+    }
+  }
+
   async setProperties(properties, options) {
     super.setProperties(properties, options);
   
@@ -53,7 +65,7 @@ class CustomPropertyPanel extends Autodesk.Viewing.Extensions.ViewerPropertyPane
     }
   }
 
-  setNodeProperties(nodeId) {
+  requestNodeProperties(nodeId) {
     super.setNodeProperties(nodeId);
     this.nodeId = nodeId; // store the dbId for later use
   }
@@ -71,14 +83,19 @@ class CustomPropertyPanelExtension extends Autodesk.Viewing.Extension {
     this.panel = null;
   }
 
-  load() {
+  async onToolbarCreated() {
+    let ext = await this.viewer.loadExtension('Autodesk.PropertiesManager');
     this.panel = new CustomPropertyPanel(this.viewer, this.options);
-    this.viewer.setPropertyPanel(this.panel);
+    ext.setPanel(this.panel);
+  }
+
+  load() {
     return true;
   }
 
   unload() {
-    this.viewer.setPropertyPanel(null);
+    let ext = this.viewer.getExtension('Autodesk.PropertiesManager');
+    ext.setPanel(null);
     this.panel = null;
     return true;
   }

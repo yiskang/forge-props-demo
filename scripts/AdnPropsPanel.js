@@ -93,7 +93,19 @@
       };
     }
 
-    async setNodeProperties( dbId ) {
+    requestProperties() {
+      if (this.isVisible() && this.isDirty) {
+
+        if (this.currentModel != null && this.currentNodeIds.length > 0) {
+          this.requestNodeProperties(this.currentNodeIds[0]);
+        } else {
+          this.showDefaultProperties();
+        }
+        this.isDirty = false;
+      }
+    }
+
+    async requestNodeProperties( dbId ) {
       this.propertyNodeId = dbId;
 
       if( !this.viewer ) return;
@@ -156,11 +168,6 @@
     }
 
     onToolbarCreated() {
-      this.viewer.removeEventListener(
-        Autodesk.Viewing.TOOLBAR_CREATED_EVENT,
-        this.onToolbarCreated
-      );
-
       this.createUI();
     }
 
@@ -198,12 +205,6 @@
       if( this.viewer.toolbar ) {
         // Toolbar is already available, create the UI
         this.createUI();
-      } else {
-        // Toolbar hasn't been created yet, wait until we get notification of its creation
-        this.viewer.addEventListener(
-          Autodesk.Viewing.TOOLBAR_CREATED_EVENT,
-          this.onToolbarCreated
-        );
       }
 
       return true;
